@@ -1,0 +1,11 @@
+# Core
+gradio>=5.0
+numpy
+pillow
+opencv-python-headless
+
+# Local model backend (LaMa). Comment out if you only want OpenCV / API.
+simple-lama-inpainting
+
+# API backend
+openai>=1.40
