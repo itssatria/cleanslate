@@ -20,6 +20,9 @@ class Backend(ABC):
     #: show API key / prompt fields for this backend
     uses_api: bool = False
 
+    def ensure_ready(self, progress=None) -> None:
+        """Download/prepare model files if needed. progress(fraction, message) is optional."""
+
     @abstractmethod
     def inpaint(
         self,

@@ -61,13 +61,16 @@ def toggle_api_fields(name):
     return gr.update(visible=BACKENDS[name].uses_api)
 
 
-def remove(editor, path, backend_name, grow_px, api_key, prompt):
+def remove(editor, path, backend_name, grow_px, api_key, prompt, progress=gr.Progress()):
     if not path or not editor or editor.get("background") is None:
         raise gr.Error("Select an image first.")
     img = editor["background"].convert("RGB")
     backend = BACKENDS[backend_name]
     try:
         mask = grow_mask(extract_mask(editor.get("layers"), img.size), int(grow_px))
+        # Checks the model file exists; downloads it automatically the first time.
+        backend.ensure_ready(lambda frac, msg: progress(frac, desc=msg))
+        progress(None, desc="Removing...")
         out = backend.inpaint(img, mask, api_key=api_key or None, prompt=prompt or None)
     except (ValueError, BackendError) as e:
         raise gr.Error(str(e))
@@ -144,7 +147,14 @@ def main():
     ap.add_argument("--port", type=int, default=7860)
     ap.add_argument("--share", action="store_true", help="create a public Gradio link")
     ap.add_argument("--no-browser", action="store_true")
+    ap.add_argument("--download-models", action="store_true",
+                    help="download local model files now instead of on first use, then exit")
     args = ap.parse_args()
+    if args.download_models:
+        for b in BACKENDS.values():
+            b.ensure_ready(lambda frac, msg: print(f"\r{msg}", end="", flush=True))
+        print("\nModels ready.")
+        return
     build_ui().launch(server_name=args.host, server_port=args.port,
                       share=args.share, inbrowser=not args.no_browser)
 

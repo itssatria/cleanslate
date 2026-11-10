@@ -4,8 +4,8 @@ numpy
 pillow
 opencv-python-headless
 
-# Local model backend (LaMa). Comment out if you only want OpenCV / API.
-simple-lama-inpainting
+# Local LaMa backend (only torch is needed; the model file downloads itself on first use)
+torch
 
 # API backend
 openai>=1.40

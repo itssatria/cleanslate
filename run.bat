@@ -1,5 +1,5 @@
 @echo off
-REM One-click launcher for Windows: creates a venv on first run, then starts the app.
+REM One-click launcher for Windows: creates a venv on first run, then starts Cleanslate.
 if not exist .venv (
     python -m venv .venv
     call .venv\Scripts\activate.bat
@@ -8,4 +8,4 @@ if not exist .venv (
 ) else (
     call .venv\Scripts\activate.bat
 )
-python -m wmremover
+python -m cleanslate

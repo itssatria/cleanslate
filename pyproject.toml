@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "wmremover"
-version = "0.1.0"
-description = "Gradio app to remove watermarks and objects from images with a Photoshop-style mask brush, using local or API inpainting models."
+name = "cleanslate"
+version = "0.3.0"
+description = "Cleanslate: paint over a watermark or object and erase it, with local (LaMa) or API inpainting. Gradio app."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -17,13 +17,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-lama = ["simple-lama-inpainting"]
+lama = ["torch"]
 openai = ["openai>=1.40"]
-all = ["simple-lama-inpainting", "openai>=1.40"]
+all = ["torch", "openai>=1.40"]
 dev = ["pytest"]
 
 [project.scripts]
-wmremover = "wmremover.app:main"
+cleanslate = "cleanslate.app:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

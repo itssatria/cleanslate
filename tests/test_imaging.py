@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from PIL import Image
 
-from wmremover.imaging import extract_mask, grow_mask, list_images, paste_masked, save_result
+from cleanslate.imaging import extract_mask, grow_mask, list_images, paste_masked, save_result
 
 
 def _layer(size, box):
@@ -53,3 +53,20 @@ def test_save_result_goes_to_cleaned(tmp_path):
     Image.new("RGB", (4, 4)).save(src)
     out = save_result(Image.new("RGB", (4, 4)), src)
     assert out == tmp_path / "cleaned" / "a.png" and out.exists()
+
+
+def test_scale_mask_follows_relative_position():
+    from cleanslate.imaging import scale_mask
+
+    m = np.zeros((40, 80), np.uint8)
+    m[30:40, 60:80] = 255  # bottom-right block
+    s = scale_mask(m, (40, 20))
+    assert s.shape == (20, 40)
+    assert s[18, 38] == 255 and s[2, 2] == 0
+    assert scale_mask(m, (80, 40)) is m  # same size: unchanged
+
+
+def test_output_path(tmp_path):
+    from cleanslate.imaging import output_path
+
+    assert output_path(tmp_path / "x.jpg") == tmp_path / "cleaned" / "x.jpg"
